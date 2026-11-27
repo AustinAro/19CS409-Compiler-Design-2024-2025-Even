@@ -19,59 +19,103 @@ To write a C program to implement a symbol table.
 
 ## PROGRAM
 ```
-    #include <stdio.h>
-    #include <stdlib.h>
-    #include <ctype.h>
-    #include <string.h>
-    
-    #define MAX_EXPRESSION_SIZE 100
-    
-    int main() {
-        int i = 0, j = 0, x = 0, n;
-        void *add[20];   // store addresses
-        char b[MAX_EXPRESSION_SIZE], d[20], c;
-    
-        printf("Enter the Expression terminated by $: ");
-        while ((c = getchar()) != '$' && i < MAX_EXPRESSION_SIZE - 1) {
-            b[i++] = c;
-        }
-        b[i] = '\0';   // Null terminate
-        n = i - 1;
-    
-        printf("Given Expression: %s\n", b);
-    
-        printf("\nSymbol Table\n");
-        printf("Symbol\taddr\ttype\n");
-    
-        for (j = 0; j <= n; j++) {
-            c = b[j];
-            if (isalpha((unsigned char)c)) {
-                if (j == n) {
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define MAX_EXPRESSION_SIZE 100
+
+int main()
+{
+    int i = 0, j = 0, x = 0, n, flag = 0;
+    void *add[5];
+
+    char b[MAX_EXPRESSION_SIZE], d[15], c, srch;
+
+    printf("Enter the Expression terminated by $: ");
+
+    while ((c = getchar()) != '$' && i < MAX_EXPRESSION_SIZE - 1)
+    {
+        b[i++] = c;
+    }
+
+    b[i] = '\0';     // Null terminate string
+    n = i - 1;
+
+    printf("\nGiven Expression: %s\n", b);
+
+    printf("\nSymbol Table\n");
+    printf("Symbol\tAddress\t\tType\n");
+
+    for (j = 0; j <= n; j++)
+    {
+        c = b[j];
+
+        if (isalpha((unsigned char)c))
+        {
+            if (j == n)
+            {
+                void *p = malloc(sizeof(char));
+                add[x] = p;
+                d[x] = c;
+
+                printf("%c\t%p\tidentifier\n", c, p);
+                x++;
+            }
+            else
+            {
+                char ch = b[j + 1];
+
+                if (ch == '+' || ch == '-' || ch == '*' || ch == '=')
+                {
                     void *p = malloc(sizeof(char));
+
                     add[x] = p;
                     d[x] = c;
+
                     printf("%c\t%p\tidentifier\n", c, p);
+
                     x++;
-                } else {
-                    char ch = b[j + 1];
-                    if (ch == '+' || ch == '-' || ch == '*' || ch == '=' || ch == '/' || ch == ';') {
-                        void *p = malloc(sizeof(char));
-                        add[x] = p;
-                        d[x] = c;
-                        printf("%c\t%p\tidentifier\n", c, p);
-                        x++;
-                    }
                 }
             }
         }
-    
-        return 0;
     }
+
+    getchar(); // consume newline left in buffer
+
+    printf("\nThe symbol to be searched: ");
+    srch = getchar();
+
+    for (i = 0; i < x; i++)
+    {
+        if (srch == d[i])
+        {
+            printf("Symbol Found\n");
+            printf("%c @ address %p\n", srch, add[i]);
+
+            flag = 1;
+        }
+    }
+
+    if (flag == 0)
+    {
+        printf("Symbol Not Found\n");
+    }
+
+    // Free allocated memory
+    for (i = 0; i < x; i++)
+    {
+        free(add[i]);
+    }
+
+    return 0;
+}
 ```
 
 ## OUTPUT 
 
-<img width="351" height="157" alt="Screenshot 2026-11-19 231114" src="https://github.com/user-attachments/assets/65aad777-a6a6-4339-91cd-d27d93ff72f0" />
+<img width="442" height="311" alt="Screenshot 2026-11-27 160748" src="https://github.com/user-attachments/assets/12c0da2f-df34-4463-810d-0fbf32f76945" />
 
 
 ## RESULT
